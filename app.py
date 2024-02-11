@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
+from tkinter import simpledialog
 
 class TextEditor:
     def __init__(self, root):
@@ -9,7 +10,6 @@ class TextEditor:
         self.text_area = tk.Text(self.root, undo=True)
         self.text_area.pack(expand=True, fill='both')
         self.setup_menu()
-        self.setup_search_bar()
 
     def setup_menu(self):
         menubar = tk.Menu(self.root)
@@ -25,6 +25,10 @@ class TextEditor:
         edit_menu.add_command(label="Undo", command=self.text_area.edit_undo)
         edit_menu.add_command(label="Redo", command=self.text_area.edit_redo)
         menubar.add_cascade(label="Edit", menu=edit_menu)
+
+        search_menu = tk.Menu(menubar, tearoff=0)
+        search_menu.add_command(label="Search", command=self.search_text)
+        menubar.add_cascade(label="Search", menu=search_menu)
 
         self.root.config(menu=menubar)
 
@@ -47,16 +51,9 @@ class TextEditor:
     def exit_editor(self):
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
             self.root.destroy()
-
-    def setup_search_bar(self):
-        self.search_entry = tk.Entry(self.root)
-        self.search_entry.pack(fill='x')
-        self.search_entry.bind("<Return>", self.search_text)  # Bind Enter key to search
-        search_button = tk.Button(self.root, text="Search", command=self.search_text)
-        search_button.pack()
     
-    def search_text(self, event=None):
-        search_query = self.search_entry.get()
+    def search_text(self):
+        search_query = simpledialog.askstring("Search", "Enter text to search:")
         if search_query:
             start_index = "1.0"
             while True:
